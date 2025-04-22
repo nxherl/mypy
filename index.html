@@ -1,16 +1,139 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <meta charset="UTF-8" />
   <title>Blackjack Game</title>
+  <link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css" />
+  <script defer src="https://pyscript.net/latest/pyscript.js"></script>
+  <style>
+    body { font-family: monospace; padding: 20px; }
+    #game-output { white-space: pre-wrap; background: #f0f0f0; padding: 10px; border-radius: 8px; }
+    input, button { padding: 6px 10px; margin-top: 10px; font-size: 16px; }
+  </style>
 </head>
 <body>
-  <h1>Play Blackjack in Python</h1>
-  <iframe 
-    height="500px" 
-    width="100%" 
-    src="https://replit.com/@nevisherl/mypy?v=1&embed=true" 
-    frameborder="0" 
-    allowfullscreen>
-  </iframe>
+
+<h1>Blackjack Game</h1>
+
+<div id="game-output">Game starting...</div>
+
+<input id="user-input" type="text" placeholder="Type y or n" />
+<button py-click="get_input()">Submit</button>
+
+<py-script>
+import random
+
+# For game state
+user_cards = []
+opponent_cards = []
+game_over = False
+user_score = -1
+opponent_score = -1
+stage = "init"
+
+output = Element("game-output")
+
+logo = """
+.------.            _     _            _    _            _    
+|A_  _ |.          | |   | |          | |  (_)          | |   
+|( \\/ ).-----.     | |__ | | __ _  ___| | ___  __ _  ___| | __
+| \\  /|K /\\  |     | '_ \\| |/ _` |/ __| |/ / |/ _` |/ __| |/ /
+|  \\/ | /  \\ |     | |_) | | (_| | (__|   <| | (_| | (__|   < 
+`-----| \\  / |     |_.__/|_|\\__,_|\\___|_|\\_\\ |\\__,_|\\___|_|\\_\\
+      |  \\/ K|                            _/ |                
+      `------'                           |__/           
+"""
+
+def deal_card():
+    return random.choice([11, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10])
+
+def calculate_score(cards):
+    if sum(cards) == 21 and len(cards) == 2:
+        return 0
+    if 11 in cards and sum(cards) > 21:
+        cards.remove(11)
+        cards.append(1)
+    return sum(cards)
+
+def compare(u_score, o_score):
+    if u_score == o_score:
+        return "it's a draw 🙃"
+    elif o_score == 0:
+        return "You lose! Opponent got a BlackJack! 😱"
+    elif u_score == 0:
+        return "You win with a BlackJack! 😎"
+    elif u_score > 21:
+        return "You went over 21..You lose! 😭"
+    elif o_score > 21:
+        return "Opponent went over 21..You win! 😁"
+    elif u_score > o_score:
+        return "You win! 😃"
+    else:
+        return "You lose! 😭"
+
+def start_game():
+    global user_cards, opponent_cards, game_over, stage
+    output.clear()
+    output.write(logo + "\n")
+    user_cards = [deal_card(), deal_card()]
+    opponent_cards = [deal_card(), deal_card()]
+    game_over = False
+    stage = "player_turn"
+    show_status()
+
+def show_status():
+    u_score = calculate_score(user_cards)
+    o_card = opponent_cards[0]
+    output.write(f"Your cards: {user_cards}, current score: {u_score}\n")
+    output.write(f"Opponent's first card: {o_card}\n")
+    if u_score == 0 or calculate_score(opponent_cards) == 0 or u_score > 21:
+        end_game()
+
+def get_input():
+    global stage, game_over
+    user_input = Element("user-input").value.strip().lower()
+    Element("user-input").value = ""
+
+    if stage == "init":
+        if user_input == "y":
+            start_game()
+        else:
+            output.write("\nThanks for playing!")
+            stage = "done"
+    elif stage == "player_turn":
+        if user_input == "y":
+            user_cards.append(deal_card())
+            if calculate_score(user_cards) > 21:
+                game_over = True
+                end_game()
+            else:
+                show_status()
+        elif user_input == "n":
+            stage = "opponent_turn"
+            opponent_play()
+
+def opponent_play():
+    global opponent_score, game_over
+    opponent_score = calculate_score(opponent_cards)
+    while opponent_score != 0 and opponent_score < 17:
+        opponent_cards.append(deal_card())
+        opponent_score = calculate_score(opponent_cards)
+    end_game()
+
+def end_game():
+    global stage
+    user_score = calculate_score(user_cards)
+    opponent_score = calculate_score(opponent_cards)
+    output.write(f"\nYour final hand: {user_cards}, final score: {user_score}")
+    output.write(f"\nOpponent's final hand: {opponent_cards}, final score: {opponent_score}")
+    output.write(f"\n\n{compare(user_score, opponent_score)}")
+    output.write("\n\nDo you want to play a game of Blackjack? Type 'y' or 'n':")
+    stage = "init"
+
+# Start prompt
+output.write("Do you want to play a game of Blackjack? Type 'y' or 'n':")
+</py-script>
+
 </body>
 </html>
+
