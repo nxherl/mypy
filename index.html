@@ -29,14 +29,11 @@ user_input_field = document["user-input"]
 submit_button = document["submit-button"]
 
 logo = """
-.------.         _     _               _
-|A_ _ |.        | |   | |             | |
-|( \\/ ).-----.  | |__ | | __ _ ___| | ___ __ _ ___| | __
-| \\  /|K /\\  |  | '_ \\| |/ _` |/ __| |/ / |/ _` |/ __| |/ /
-|  \\/ | /  \\ |  | |_) | | (_| | (__|  <| | (_| | (__|  <
-`-----| \\  / |  |_.__/|_|\\__,_|\\___|_|\\_\\ |\\__,_|\\___|_|\\_\\
-      |  \\/ K|                               _/ |
-      `------'                              |__/
+  _______
+ |       |
+ | BLACK |
+ |  JACK |
+ |_______|
 """
 
 user_cards = []
@@ -94,6 +91,8 @@ def show_status():
     show_message(f"Opponent's first card: {opponent_cards[0]}")
     if user_score == 0 or calculate_score(opponent_cards) == 0 or user_score > 21:
         end_game()
+    elif stage == "player_turn":
+        show_message("Do you want to draw another card? Type 'y' for yes, 'n' for no:")
 
 def opponent_play():
     global stage
