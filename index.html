@@ -1,177 +1,31 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Blackjack Game</title>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/brython/3.11.0/brython.min.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/brython/3.11.0/brython_stdlib.js"></script>
-    <style>
-        body {
-            font-family: monospace;
-            background-color: black;
-            color: #00FF00;
-            padding: 20px;
-            font-size: 18px;
-        }
-        #game-output {
-            white-space: pre-wrap;
-            background: #111;
-            padding: 15px;
-            border-radius: 8px;
-            min-height: 200px;
-            color: #00FF00;
-        }
-        input, button {
-            padding: 8px 14px;
-            margin-top: 10px;
-            font-size: 18px;
-            background-color: #222;
-            color: #00FF00;
-            border: 1px solid #00FF00;
-            border-radius: 4px;
-        }
-        input::placeholder {
-            color: #00FF00;
-        }
-        button:hover {
-            background-color: #333;
-            cursor: pointer;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>My Py Games</title>
+  <style>
+    body {
+      font-family: monospace;
+      background-color: black;
+      color: #00FF00;
+      padding: 20px;
+      font-size: 18px;
+    }
+    a {
+      color: #00FF00;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
 </head>
-<body onload="brython()">
-
-<h1>Blackjack Python 🐍🃏</h1>
-
-<div id="game-output">Loading...</div>
-
-<input id="user-input" type="text" placeholder="Type 'y' or 'n'" />
-<button id="submit-button">Submit</button>
-
-<script type="text/python">
-from browser import document, html, bind, window
-import random
-
-output = document["game-output"]
-user_input_field = document["user-input"]
-submit_button = document["submit-button"]
-
-logo = """
-
-.------.            _     _            _    _            _    
-|A_  _ |.          | |   | |          | |  (_)          | |   
-|( \/ ).-----.     | |__ | | __ _  ___| | ___  __ _  ___| | __
-| \  /|K /\  |     | '_ \| |/ _` |/ __| |/ / |/ _` |/ __| |/ /
-|  \/ | /  \ |     | |_) | | (_| | (__|   <| | (_| | (__|   < 
-`-----| \  / |     |_.__/|_|\__,_|\___|_|\_\ |\__,_|\___|_|\_\\
-      |  \/ K|                            _/ |                
-      `------'                           |__/           
-
-"""
-
-user_cards = []
-opponent_cards = []
-game_over = False
-stage = "init"
-
-def deal_card():
-    return random.choice([11, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10])
-
-def calculate_score(cards):
-    if sum(cards) == 21 and len(cards) == 2:
-        return 0
-    if 11 in cards and sum(cards) > 21:
-        cards.remove(11)
-        cards.append(1)
-    return sum(cards)
-
-def compare(u_score, o_score):
-    if u_score == o_score:
-        return "It's a draw 🙃"
-    elif o_score == 0:
-        return "You lose! Opponent got a Blackjack! 😱"
-    elif u_score == 0:
-        return "You win with a Blackjack! 😎"
-    elif u_score > 21:
-        return "You went over 21.. You lose! 😭"
-    elif o_score > 21:
-        return "Opponent went over 21.. You win! 😁"
-    elif u_score > o_score:
-        return "You win! 😃"
-    else:
-        return "You lose! 😭"
-
-def show_message(message):
-    output <= html.P(message)
-
-def clear_output():
-    output.html = ""
-
-def start_game():
-    global user_cards, opponent_cards, game_over, stage
-    clear_output()
-    show_message(logo)
-    user_cards = []
-    opponent_cards = []
-    user_cards.extend([deal_card(), deal_card()])
-    opponent_cards.extend([deal_card(), deal_card()])
-    stage = "player_turn"
-    show_status()
-
-def show_status():
-    user_score = calculate_score(user_cards)
-    show_message(f"Your cards: {user_cards}, current score: {user_score}")
-    show_message(f"Opponent's first card: {opponent_cards[0]}")
-    if user_score == 0 or calculate_score(opponent_cards) == 0 or user_score > 21:
-        end_game()
-    elif stage == "player_turn":
-        show_message("Do you want to draw another card? Type 'y' for yes, 'n' for no:")
-
-def opponent_play():
-    global stage
-    while calculate_score(opponent_cards) != 0 and calculate_score(opponent_cards) < 17:
-        opponent_cards.append(deal_card())
-    end_game()
-
-def end_game():
-    global stage
-    user_score = calculate_score(user_cards)
-    opponent_score = calculate_score(opponent_cards)
-    show_message(f"Your final hand: {user_cards}, final score: {user_score}")
-    show_message(f"Opponent's final hand: {opponent_cards}, final score: {opponent_score}")
-    show_message(compare(user_score, opponent_score))
-    show_message("Do you want to play again? Type 'y' or 'n':")
-    stage = "init"
-
-def get_input():
-    global stage
-    user_input = user_input_field.value.strip().lower()
-    user_input_field.value = ""
-
-    if stage == "init":
-        if user_input == "y":
-            start_game()
-        else:
-            show_message("Thanks for playing!")
-    elif stage == "player_turn":
-        if user_input == "y":
-            user_cards.append(deal_card())
-            if calculate_score(user_cards) > 21:
-                end_game()
-            else:
-                show_status()
-        elif user_input == "n":
-            stage = "opponent_turn"
-            opponent_play()
-
-# Initial prompt
-clear_output()
-show_message("Do you want to play a game of Blackjack? Type 'y' or 'n':")
-
-@bind(submit_button, "click")
-def handle_submit(event):
-    get_input()
-</script>
-
+<body>
+  <h1>My Py Games 🐍🎮</h1>
+  <p>Choose which game you want to play:</p>
+  <ul>
+    <li><a href="blackjack.html">1. Blackjack 🃏</a></li>
+    <li><a href="rockpaperscissor.html">2. Rock, paper, scissor ✊🖐✌️</a></li>
+  </ul>
 </body>
 </html>
