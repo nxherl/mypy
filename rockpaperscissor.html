@@ -39,7 +39,7 @@
 
     <label for="user_choice">Enter your choice (0 for Rock, 1 for Paper, 2 for Scissors):</label>
     <input type="text" id="user_choice" name="user_choice">
-    <button onclick="runPython()">Submit</button>
+    <button onclick="playGame()">Submit</button>
 
     <div id="output"></div>
 
@@ -74,7 +74,8 @@
 ---.__(___)
 '''
 
-        def play_game(user_input_str):
+        def playGame():
+            user_input_str = document["user_choice"].value
             output_area = document["output"]
             output_area.text = "" # Clear previous output
 
@@ -123,10 +124,6 @@
                 output_area.text += "\nCongratulations! You win\n\n"
             elif user_input == 2 and cpu_choice == 2:
                 output_area.text += "\nYou draw\n\n"
-
-        def runPython():
-            user_choice_input = document["user_choice"].value
-            play_game(user_choice_input)
 
     </script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/brython/3.11.0/brython.min.js"></script>
