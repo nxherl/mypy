@@ -6,9 +6,37 @@
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/brython/3.11.0/brython.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/brython/3.11.0/brython_stdlib.js"></script>
     <style>
-        body { font-family: monospace; padding: 20px; }
-        #game-output { white-space: pre-wrap; background: #f4f4f4; padding: 10px; border-radius: 8px; min-height: 200px; }
-        input, button { padding: 6px 10px; margin-top: 10px; font-size: 16px; }
+        body {
+            font-family: monospace;
+            background-color: black;
+            color: #00FF00;
+            padding: 20px;
+            font-size: 18px;
+        }
+        #game-output {
+            white-space: pre-wrap;
+            background: #111;
+            padding: 15px;
+            border-radius: 8px;
+            min-height: 200px;
+            color: #00FF00;
+        }
+        input, button {
+            padding: 8px 14px;
+            margin-top: 10px;
+            font-size: 18px;
+            background-color: #222;
+            color: #00FF00;
+            border: 1px solid #00FF00;
+            border-radius: 4px;
+        }
+        input::placeholder {
+            color: #00FF00;
+        }
+        button:hover {
+            background-color: #333;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body onload="brython()">
