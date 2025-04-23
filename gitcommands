@@ -1,0 +1,37 @@
+https://nxherl.github.io/nxh.github.io/
+
+
+git config --global user.name "nxherl"
+git config --global user.email "nevisherl@gmail.com"
+git clone https://github.com/nxherl/mypy.git
+git status 
+git add Blackjack.py 
+git commit -m "adding new game blackjack"
+git remote set-url origin https://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@github.com/nxherl/nxh.github.io.git
+git push origin main 
+
+* token: profile setting -> developer settings -> personal access tokens -> fine-grained tokens
+
+
+
+create a new repository on the command line
+
+echo "# pypractice" >> README.md
+git init
+git add README.md
+git commit -m "first commit"
+git branch -M main
+git remote add origin https://github.com/nxherl/pypractice.git
+git push -u origin main
+
+…or push an existing repository from the command line
+
+git remote add origin https://github.com/nxherl/pypractice.git
+git branch -M main
+git push -u origin main
+
+
+
+
+Reference:
+https://www.youtube.com/watch?v=bvi37IbJXS4
