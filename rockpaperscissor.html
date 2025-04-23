@@ -1,137 +1,107 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Rock, paper scissor py game</title>
-    <style>
-        body {
-            font-family: monospace;
-            background-color: black;
-            color: #00FF00;
-            padding: 20px;
-            font-size: 18px;
-        }
-        button {
-            background-color: #222;
-            color: #00FF00;
-            border: 1px solid #00FF00;
-            padding: 8px 15px;
-            font-family: monospace;
-            font-size: 16px;
-            cursor: pointer;
-        }
-        input[type="text"] {
-            background-color: #222;
-            color: #00FF00;
-            border: 1px solid #00FF00;
-            padding: 8px;
-            font-family: monospace;
-            font-size: 16px;
-            margin-right: 10px;
-        }
-        #output {
-            margin-top: 20px;
-            white-space: pre-wrap; /* Preserve formatting from Python's print */
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>Rock, paper scissor py game</title>
+  <style>
+    body {
+      font-family: monospace;
+      background-color: black;
+      color: #00FF00;
+      padding: 20px;
+      font-size: 18px;
+    }
+    input, button {
+      font-family: monospace;
+      font-size: 18px;
+      margin-top: 10px;
+      background-color: #222;
+      color: #00FF00;
+      border: 1px solid #00FF00;
+      padding: 5px 10px;
+    }
+    #output {
+      margin-top: 20px;
+      white-space: pre-wrap;
+    }
+  </style>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/brython@3.12.1/brython.min.js"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/brython@3.12.1/brython_stdlib.js"></script>
 </head>
-<body>
-    <h1>Rock, paper scissor ✊🖐✌ py game</h1>
+<body onload="brython()">
+  <h1>Rock, paper scissor ✊🖐✌ py game</h1>
+  <p>Type 0 for Rock, 1 for Paper or 2 for Scissors:</p>
+  <input id="user_input" type="text">
+  <button onclick="run_game()">Submit</button>
+  <pre id="output"></pre>
 
-    <label for="user_choice">Enter your choice (0 for Rock, 1 for Paper, 2 for Scissors):</label>
-    <input type="text" id="user_choice" name="user_choice">
-    <button onclick="playGame()">Submit</button>
+  <script type="text/python">
+from browser import document
+import random
 
-    <div id="output"></div>
-
-    <script type="text/python">
-        from browser import document, alert, console, prompt, window
-        import random
-
-        rock = '''
-  _______
----'    ____)
-        (_____)
-        (_____)
-        (____)
+rock = '''
+    _______
+---'   ____)
+      (_____)
+      (_____)
+      (____)
 ---.__(___)
 '''
 
-        paper = '''
-  _______
----'    ____)____
-            ______)
-            _______)
-            _______)
+paper = '''
+    _______
+---'   ____)____
+          ______)
+          _______)
+         _______)
 ---.__________)
 '''
 
-        scissors = '''
-  _______
----'    ____)____
-            ______)
-         __________)
-        (____)
+scissors = '''
+    _______
+---'   ____)____
+          ______)
+       __________)
+      (____)
 ---.__(___)
 '''
 
-        def playGame():
-            user_input_str = document["user_choice"].value
-            output_area = document["output"]
-            output_area.text = "" # Clear previous output
+def run_game(event=None):
+    user_input = document["user_input"].value.strip()
+    output = "Welcome to Game of Rock Paper Scissor\n\n"
 
-            if not user_input_str.isdigit():
-                output_area.text = "Invalid input. Please enter 0, 1, or 2."
-                return
+    if user_input == "0":
+        output += "You chose:\n" + rock + "\n"
+    elif user_input == "1":
+        output += "You chose:\n" + paper + "\n"
+    elif user_input == "2":
+        output += "You chose:\n" + scissors + "\n"
+    else:
+        document["output"].text = "Invalid input"
+        return
 
-            user_input = int(user_input_str)
+    cpu_choice = random.randint(0, 2)
+    output += "\n\nOpponent chose:\n"
+    if cpu_choice == 0:
+        output += rock
+    elif cpu_choice == 1:
+        output += paper
+    else:
+        output += scissors
 
-            if user_input not in [0, 1, 2]:
-                output_area.text = "Invalid input. Please enter 0, 1, or 2."
-                return
+    result = ""
+    if user_input == str(cpu_choice):
+        result = "\nYou draw"
+    elif (user_input == "0" and cpu_choice == 2) or \
+         (user_input == "1" and cpu_choice == 0) or \
+         (user_input == "2" and cpu_choice == 1):
+        result = "\nCongratulations! You win"
+    else:
+        result = "\nYou lose. Better luck next time!"
 
-            output_area.text += "You chose:\n"
-            if user_input == 0:
-                output_area.text += rock + "\n"
-            elif user_input == 1:
-                output_area.text += paper + "\n"
-            else:
-                output_area.text += scissors + "\n"
+    document["output"].text = output + result
 
-            output_area.text += "\nOpponent chose:\n"
-            cpu_choice = random.randint(0, 2)
-            if cpu_choice == 0:
-                output_area.text += rock + "\n"
-            elif cpu_choice == 1:
-                output_area.text += paper + "\n"
-            else:
-                output_area.text += scissors + "\n"
-
-            if user_input == 0 and cpu_choice == 0:
-                output_area.text += "\nYou draw\n\n"
-            elif user_input == 0 and cpu_choice == 1:
-                output_area.text += "\nYou lose. Better luck next time!\n\n"
-            elif user_input == 0 and cpu_choice == 2:
-                output_area.text += "\nCongratulations! You win\n\n"
-            elif user_input == 1 and cpu_choice == 0:
-                output_area.text += "\nCongratulations! You win\n\n"
-            elif user_input == 1 and cpu_choice == 1:
-                output_area.text += "\nYou draw\n\n"
-            elif user_input == 1 and cpu_choice == 2:
-                output_area.text += "\nYou lose. Better luck next time!\n\n"
-            elif user_input == 2 and cpu_choice == 0:
-                output_area.text += "\nYou lose. Better luck next time!\n\n"
-            elif user_input == 2 and cpu_choice == 1:
-                output_area.text += "\nCongratulations! You win\n\n"
-            elif user_input == 2 and cpu_choice == 2:
-                output_area.text += "\nYou draw\n\n"
-
-    </script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/brython/3.11.0/brython.min.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/brython/3.11.0/brython_stdlib.js"></script>
-    <script type="text/javascript">
-        window.onload = function(){
-            brython();
-        }
-    </script>
+document["user_input"].bind("keypress", lambda e: run_game() if e.key == "Enter" else None)
+  </script>
 </body>
 </html>
