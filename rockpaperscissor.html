@@ -32,7 +32,7 @@
   <h1>Rock, paper scissor ✊🖐✌ py game</h1>
   <p>Type 0 for Rock, 1 for Paper or 2 for Scissors:</p>
   <input id="user_input" type="text">
-  <button onclick="run_game()">Submit</button>
+  <button id="submit_btn">Submit</button>
   <pre id="output"></pre>
 
   <script type="text/python">
@@ -101,7 +101,10 @@ def run_game(event=None):
 
     document["output"].text = output + result
 
+# Bind Enter key
 document["user_input"].bind("keypress", lambda e: run_game() if e.key == "Enter" else None)
+# ✅ Bind Button click
+document["submit_btn"].bind("click", run_game)
   </script>
 </body>
 </html>
